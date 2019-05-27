@@ -629,7 +629,7 @@ class MTP(object):
         return(np.average(performance,axis = 0))
     
     
-  def cluster_MNL_choice(self,X,A,Y,Xnew,Anew,Ynew,k,weights =None):
+  def cluster_MNL_choice(self,X,A,Y,Xnew,Anew,Ynew,k,weights =None,*leafargs_fit,**leafkwargs_fit):
     '''
     Kmean cluster benchmark
     '''
@@ -644,17 +644,17 @@ class MTP(object):
         inds = np.where(train_labels == i)[0]
         new_inds = np.where(test_labels == i)[0]            
         LM = LeafModel()
-        sub_A = get_sub(inds,A=Anew,is_boolvec=False)
-        sub_Y = get_sub(inds,Y=Ynew,is_boolvec=False)            
+        sub_A = get_sub(inds,A=A,is_boolvec=False)
+        sub_Y = get_sub(inds,Y=Y,is_boolvec=False)            
         sub_weight = self.weights[inds]
-        LM.fit(sub_A,sub_Y,sub_weight,*self.leafargs_fit,**self.leafkwargs_fit)
-        performance_dict = LM.eval_model(get_sub(inds,A=Anew,is_boolvec=False),
-                                         get_sub(inds,Y=Ynew,is_boolvec=False))
+        LM.fit(sub_A,sub_Y,sub_weight,*leafargs_fit,**leafkwargs_fit)
+        performance_dict = LM.eval_model(get_sub(new_inds,A=Anew,is_boolvec=False),
+                                         get_sub(new_inds,Y=Ynew,is_boolvec=False))
         performance[new_inds,0] = performance_dict["loss"]
         performance[new_inds,1] = performance_dict["accuracy"]
         performance[new_inds,2] = performance_dict["average_rank"]  
         performance[new_inds,3] = performance_dict["average_perc"]
-    return(np.average(performance,axis = 0))               
+    return(np.average(performance,axis = 0))             
         
   '''
   Given data Xnew,Anew outputs errors for each observation (e.g., prediction error) as a function of response data Ynew
