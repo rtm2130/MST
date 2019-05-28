@@ -5,10 +5,6 @@ import copy
 import tensorflow as tf
 
 from functools import reduce 
-
-# from sklearn.linear_model import LogisticRegression
-# from cvxopt import solvers, matrix, spdiag, log, exp, div
-from data_model import DataModel
 from collections import OrderedDict    # For recording the model specification 
 
 '''
@@ -213,8 +209,8 @@ def mnl_tf(features,labels,mode,params):
             logits = tf.reduce_sum(tf.multiply(input_features, weight_scaled),axis = 1)
     else:
         with jit_scope():
-            logits = tf.maximum(tf.tf.reduce_sum(tf.multiply(input_features[:,1:,:]
-                                           , weight_scaled),axis = 1))
+            logits = tf.reduce_sum(tf.multiply(input_features[:,1:,:]
+                                           , weight_scaled),axis = 1)
     
   
 #        # Variables.
