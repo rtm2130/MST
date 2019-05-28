@@ -10,12 +10,12 @@ as well as helper functions for certain operations in the tree fitting procedure
 One can feel free to edit the code below to accommodate any leaf node model.
 The leaf node model used here is an isotonic regression model fit
 on data (A,Y). A is a vector of bids, and Y is a vector of 0s/1s corresponding
-to auction win/losses (A is are the decisions "P" in the paper).
+to auction win/losses (A is are the decisions "P" in the paper). 
+Make sure to add an import statement to mtp.py importing this leaf model class.
 
 Summary of methods and functions to specify:
   Methods as a part of class LeafModel: fit(), predict(), to_string(), error(), error_pruning()
   Other helper functions: get_sub(), are_Ys_diverse()
-  
 '''
 
 '''
