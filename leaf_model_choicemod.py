@@ -8,7 +8,7 @@ from functools import reduce
 
 # from sklearn.linear_model import LogisticRegression
 # from cvxopt import solvers, matrix, spdiag, log, exp, div
-from data_model import DataModel
+#from data_model import DataModel
 from collections import OrderedDict    # For recording the model specification 
 
 '''
@@ -48,8 +48,10 @@ def exponomial_tf(features,labels,mode,params):
     is_bias = params[3]
     # initialize a tensorflow graph
     input_features = tf.reshape(features["x"],[-1,num_features,n])
-    m = params[4]
-    print("Batch size "+str(n) +" "+str(m))
+    learning_rate = params[4] 
+#    learning_rate = 0.0003    
+    m = params[5]
+#    print("Batch size "+str(n) +" "+str(m))
     
     # Variables.
     if model_type == 0:
@@ -131,7 +133,7 @@ def exponomial_tf(features,labels,mode,params):
     # Configure the Training Op (for TRAIN mode)
     if mode == tf.estimator.ModeKeys.TRAIN:
 #        optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.001)
-        optimizer = tf.train.AdamOptimizer(learning_rate=0.0002)        
+        optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate)        
         train_op = optimizer.minimize(
             loss=loss,
             global_step=tf.train.get_global_step())
@@ -178,6 +180,7 @@ def mnl_tf(features,labels,mode,params):
     num_features = params[2]
     is_bias = params[3]
     learning_rate = params[4]    
+#    learning_rate = 0.001
 #    fit_init = params[4]
     
     input_features = tf.reshape(features["x"],[-1,num_features,n])
@@ -213,8 +216,8 @@ def mnl_tf(features,labels,mode,params):
             logits = tf.reduce_sum(tf.multiply(input_features, weight_scaled),axis = 1)
     else:
         with jit_scope():
-            logits = tf.maximum(tf.tf.reduce_sum(tf.multiply(input_features[:,1:,:]
-                                           , weight_scaled),axis = 1))
+            logits = tf.reduce_sum(tf.multiply(input_features[:,1:,:]
+                                           , weight_scaled),axis = 1)
     
   
 #        # Variables.
@@ -228,7 +231,7 @@ def mnl_tf(features,labels,mode,params):
     # Predictions for the training, validation, and test data.
     with jit_scope():
         masked_logits = tf.multiply(logits,tf.cast(input_features[:,0,:]>0, tf.float32))\
-                                         -10e10*tf.cast(input_features[:,0,:]<=0, tf.float32)
+                                         -10e9*tf.cast(input_features[:,0,:]<=0, tf.float32)
 #        probas0 =tf.multiply(tf.nn.softmax(logits, name="softmax_tensor"),
 #                            tf.cast(input_features[:,0,:]>0, tf.float32))
 #        probas =tf.multiply(tf.nn.softmax(logits, name="softmax_tensor"),
@@ -340,8 +343,8 @@ class LeafModel(object):
     '''
     def fit(self, A, Y, weights, fit_init=None, refit=False, mode = "mnl",
             batch_size = 50, path = "", model_type = 0, num_features = 2, 
-            epochs = 10, steps = 12000, steps_refit = 20000, learning_rate = 0.01,
-            learning_rate_refit = 0.005, is_bias = True):
+            epochs = 10, steps = 25000, steps_refit = 60000, learning_rate = 0.02,
+            learning_rate_refit = 0.001, is_bias = True):
         '''
         Fits a multinomial logistic regression to the data (A,Y).
         Here, 
@@ -383,7 +386,7 @@ class LeafModel(object):
                     config = es_congig)
             elif mode == "exponomial":
                 model_estimator = tf.estimator.Estimator(
-                    model_fn=exponomial_tf, model_dir=path, params= [model_type,n,num_features,is_bias,batch_size],
+                    model_fn=exponomial_tf, model_dir=path, params= [model_type,n,num_features,is_bias,learning_rate,batch_size],
                     config = es_congig)
                 
             # Set up logging for predictions
@@ -448,7 +451,7 @@ class LeafModel(object):
     
     Any additional args passed to MTP's predict() function are directly passed here
     '''
-    def predict(self, A, batch_size =50, name = 'probabilities', *args,**kwargs):
+    def predict(self, A, batch_size =100, name = 'probabilities', *args,**kwargs):
         '''
         This function applies model from fit() to predict choice data given new data A.
           Returns a list/numpy array of choices (one list entry per observation, i.e. l[i] yields prediction for ith obs.).
@@ -456,20 +459,25 @@ class LeafModel(object):
   
         Any additional args passed to ChoiceModelTree's predict() function are directly passed here
         '''
+        
+        exact_size = int(np.ceil(A.shape[0]/float(batch_size)))*batch_size
+        q = int(np.ceil(exact_size/float(A.shape[0])))
+        B = np.tile(A,(q,1))[:exact_size,:]
+#        print A.shape, B.shape,exact_size,q
         #Predicts choice proba values m-by-n given vector of new prices A, using coefficients self.model_coef.
         eval_input_fn = tf.estimator.inputs.numpy_input_fn(
-              x={"x": np.float32(A), "weight_data": np.ones(A.shape[0])}, 
+              x={"x": np.float32(B), "weight_data": np.ones(B.shape[0])}, 
               y= None, shuffle = False, batch_size = batch_size)
         predictions = self.model_obj.predict(eval_input_fn)
 #        i = 0
 #        for p in predictions:
 #            i +=1
-        pred_mat = np.zeros((A.shape[0],self.n))
+        pred_mat = np.zeros((B.shape[0],self.n))
         i = 0
         for p in predictions:
             pred_mat[i,:] = p[name]
             i +=1
-        return(pred_mat)
+        return(pred_mat[:A.shape[0],:])
     
     '''
     This function outputs the errors for each observation in pair (A,Y).  
@@ -511,7 +519,7 @@ class LeafModel(object):
         return("Model parameters: " + reduce(lambda x,y: x + '_' + str(y), self.model_coef,""))
     
     #not needed to specify for other leaf models
-    def eval_model(self, A,Y, weights = None,batch_size = 50):
+    def eval_model(self, A,Y, weights = None,batch_size = 100):
         '''
         Evaluates the model on a holdout dataset
         '''
