@@ -6,7 +6,8 @@ These classes/methods are used to define the leaf model object in each leaf node
 as well as helper functions for certain operations in the tree fitting procedure.
 
 One can feel free to edit the code below to accommodate any leaf node model.
-The leaf node model is fit on data (A,Y). (A is are the decisions "P" in the paper)
+The leaf node model is fit on data (A,Y). (A is are the decisions "P" in the paper).
+Make sure to add an import statement to mtp.py importing this leaf model class.
 
 Summary of methods and functions to specify:
   Methods as a part of class LeafModel: fit(), predict(), to_string(), error(), error_pruning()

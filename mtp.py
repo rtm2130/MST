@@ -654,7 +654,7 @@ class MTP(object):
         performance[new_inds,1] = performance_dict["accuracy"]
         performance[new_inds,2] = performance_dict["average_rank"]  
         performance[new_inds,3] = performance_dict["average_perc"]
-    return(np.average(performance,axis = 0))               
+    return(np.average(performance,axis = 0))             
         
   '''
   Given data Xnew,Anew outputs errors for each observation (e.g., prediction error) as a function of response data Ynew

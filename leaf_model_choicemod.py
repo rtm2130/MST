@@ -5,10 +5,6 @@ import copy
 import tensorflow as tf
 
 from functools import reduce 
-
-# from sklearn.linear_model import LogisticRegression
-# from cvxopt import solvers, matrix, spdiag, log, exp, div
-#from data_model import DataModel
 from collections import OrderedDict    # For recording the model specification 
 
 '''
@@ -23,6 +19,7 @@ denotes the availability data encoding which subsets of products are offered to 
 A[:,num-products*f:num-products*(f+1)] encodes the product feature f for each alternative.
 (A is are the decisions "P" in the paper)
 Y is a vector with each element in {0,...,K-1} corresponding to the customer's choice.
+Make sure to add an import statement to mtp.py importing this leaf model class.
 
 Summary of methods and functions to specify:
   Methods as a part of class LeafModel: fit(), predict(), to_string(), error(), error_pruning()
