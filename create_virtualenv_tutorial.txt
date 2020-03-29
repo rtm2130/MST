@@ -1,0 +1,39 @@
+This guide will show how to create a virtual environment (called "mstenv") containing all package dependencies. 
+Note: these instructions have only been tested on OSX/Linux systems and Python 2.7.
+
+Open a terminal and run the following command to create the virtual environment with the desired version of python (the example uses Python 2.7).
+
+conda create --name mstenv python=2.7 r-essentials r-base
+
+Next, activate the virtual environment using the command below. If you ever close the terminal window before completing all the steps below, reopen a terminal window and reenter this command.
+
+conda activate mstenv
+
+Now we will install the python package dependencies. Enter the commands below:
+
+conda install scikit-learn
+conda install -c anaconda joblib
+conda install -c r rpy2
+
+Our code also depends on some R packages. Type "R" into the terminal and hit enter. Then, run the following commands. If the installation for any of these packages fails, try a different CRAN mirror (we used mirror 57: USA (TX 1)).
+
+install.packages("mlogit")
+install.packages("mnlogit")
+install.packages("matrixStats")
+install.packages("data.table")
+install.packages("limSolve")
+
+Quit R using q().
+
+Last, we will install tensorflow. Follow the instructions here to install tensorflow in your virtualenv: 
+- python 2.7: https://www.tensorflow.org/install/pip?lang=python3
+- python 3: https://www.tensorflow.org/install/pip?lang=python2. 
+The following command worked for us:
+pip install --upgrade tensorflow
+
+Finally, enter the command:
+conda deactivate
+
+You have now successfully created your virtual environment. To run the code in the repository, make sure you open terminal and enter the command "conda activate mstenv" to activate the virtual environment. After you are done, enter the command "conda deactivate".
+
+The above commands were tested on R version 3.5.1 and Python 2.7.16
