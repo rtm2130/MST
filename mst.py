@@ -1,35 +1,34 @@
 # -*- coding: utf-8 -*-
 """
-MTP IMPLEMENTATION
+MST IMPLEMENTATION
 """
 #import math
 import numpy as np
 import pandas as pd
-from sklearn.cluster import KMeans
 from joblib import Parallel, delayed
 
 '''
 Import proper leaf model here:
 '''
-#from leaf_model_choicemod import *
-from leaf_model_isoreg import *
+from leaf_model_mnl import *
+#from leaf_model_isoreg import *
 
 '''
-Model Trees for Personalization (MTP)
+Market Segmentation Trees (MST)
 
-This is a class for training MTPs and using them for prediciton. It builds leaf modes
+This is a class for training MSTs and using them for prediciton. It builds leaf modes
 in each leaf corresponding to the given leaf modeling class.
 
-MTP has the following methods:
-  __init__(): initializes the MTP
-  fit(): trains the MTP on data: contexts X, decisions P (labeled as A in this code), responses Y
-  traverse(): prints out the learned MTP
+MST has the following methods:
+  __init__(): initializes the MST
+  fit(): trains the MST on data: contexts X, decisions P (labeled as A in this code), responses Y
+  traverse(): prints out the learned MST
   prune(): prunes the tree on a held-out validation set to prevent overfitting
   predict(): predict response distribution given new contexts X and decisions P
   
 '''
 
-class MTP(object):
+class MST(object):
     
   '''
   This function initializes the tree
@@ -128,6 +127,8 @@ class MTP(object):
   '''
   def fit(self, X, A, Y, weights=None, feats_continuous=False, verbose=False, refit_leaves=False, *leafargs_fit,**leafkwargs_fit):
     
+    self.leafargs_fit = leafargs_fit
+    self.leafkwargs_fit = leafkwargs_fit    
     num_obs = X.shape[0]
     num_features = X.shape[1]
     
@@ -179,27 +180,9 @@ class MTP(object):
     tree.append(_Node())
     tree[0].set_attr(ind=0, parent_ind=None, depth=0, data_inds=range(0,num_obs))
     leaf_mod = LeafModel(*leaf_params.leafargs,**leaf_params.leafkwargs)
-    leaf_mod.fit(A, Y, weights,*leaf_params.leafargs_fit,**leaf_params.leafkwargs_fit)
+    leaf_mod.fit(A, Y, weights, refit=refit_leaves, *leaf_params.leafargs_fit,**leaf_params.leafkwargs_fit)
     leaf_mod_error = fast_avg(leaf_mod.error(A,Y),weights)
     tree[0].set_attr(fitted_model=leaf_mod,fitted_model_error=leaf_mod_error)
-    
-#    temp_dir = tempfile.mkdtemp()
-#    Xfilename = os.path.join(temp_dir, 'joblibX.mmap')
-#    Afilename = os.path.join(temp_dir, 'joblibA.mmap')
-#    Yfilename = os.path.join(temp_dir, 'joblibY.mmap')
-#    wfilename = os.path.join(temp_dir, 'joblibw.mmap')
-#    Xmemmap = np.memmap(Xfilename, dtype='float32', mode='w+', shape=X.shape)
-#    Amemmap = np.memmap(Afilename, dtype='float32', mode='w+', shape=A.shape)
-#    Ymemmap = np.memmap(Yfilename, dtype='float32', mode='w+', shape=Y.shape)
-#    wmemmap = np.memmap(wfilename, dtype='float32', mode='w+', shape=weights.shape)
-#    Xmemmap[:] = X[:]
-#    Amemmap[:] = A[:]
-#    Ymemmap[:] = Y[:]
-#    wmemmap[:] = weights[:]
-#    X = Xmemmap
-#    A = Amemmap
-#    Y = Ymemmap
-#    weights = wmemmap
     
     cur_depth_nodes_inds = [0]
     next_depth_nodes_inds = []    
@@ -370,7 +353,7 @@ class MTP(object):
   Prunes the tree. Set verbose=True to track progress
   approx_pruning: should we use faster pruning method which finds approximately the best alpha?
   '''
-  def prune(self, Xval, Aval, Yval, weights_val=None, one_SE_rule=True,verbose=False,approx_pruning=False):
+  def prune(self, Xval, Aval, Yval, weights_val=None, one_SE_rule=True,verbose=False,approx_pruning=False, tol=0):
     
     #If Xval is a pandas data frame, convert it to a numpy array
     if (isinstance(Xval,pd.core.frame.DataFrame)):
@@ -387,7 +370,7 @@ class MTP(object):
     if approx_pruning == False:
       if verbose == True:
         print("Conducting CART Pruning Method")
-      self.alpha_best, _ = self.prune_find_best_alpha(self.alpha_seq, Xval, Aval, Yval, weights_val, one_SE_rule, verbose)
+      self.alpha_best, _ = self.prune_find_best_alpha(self.alpha_seq, Xval, Aval, Yval, weights_val, one_SE_rule, tol, verbose)
     else:
       K = len(self.alpha_seq)
       num_intervals = int(np.floor(np.sqrt(2*K)+1))
@@ -395,7 +378,7 @@ class MTP(object):
       interval_alpha_seq = self.alpha_seq[interval_inds]
       if verbose == True:
         print("Conducting Approximate CART Pruning Method: Pass 1/2")
-      _, i_best = self.prune_find_best_alpha(interval_alpha_seq, Xval, Aval, Yval, weights_val, one_SE_rule, verbose)
+      _, i_best = self.prune_find_best_alpha(interval_alpha_seq, Xval, Aval, Yval, weights_val, one_SE_rule, tol, verbose)
       
       if i_best == 0:
         l_ind = 0
@@ -410,13 +393,13 @@ class MTP(object):
       within_interval_alpha_seq = self.alpha_seq[range(l_ind,r_ind+1)]
       if verbose == True:
         print("Conducting Approximate CART Pruning Method: Pass 2/2")
-      self.alpha_best, _ = self.prune_find_best_alpha(within_interval_alpha_seq, Xval, Aval, Yval, weights_val, one_SE_rule, verbose)
+      self.alpha_best, _ = self.prune_find_best_alpha(within_interval_alpha_seq, Xval, Aval, Yval, weights_val, one_SE_rule, tol, verbose)
     return
   
   '''
   helper method for prune(). finds best alpha in alpha_seq and index corresponding to that alpha
   '''
-  def prune_find_best_alpha(self, alpha_seq, Xval, Aval, Yval, weights_val, one_SE_rule, verbose):
+  def prune_find_best_alpha(self, alpha_seq, Xval, Aval, Yval, weights_val, one_SE_rule, tol, verbose):
     num_val_obs = Xval.shape[0]
     
     val_error = np.array([None]*len(alpha_seq));
@@ -445,32 +428,51 @@ class MTP(object):
     min_ind = np.argmin(val_error);
     
     if (one_SE_rule == False):
-      return alpha_seq[min_ind], min_ind
+      #return alpha_seq[min_ind], min_ind
+      tmp = which(val_error <= val_error[min_ind] + abs(val_error[min_ind])*tol);
+      alpha_best = max(alpha_seq[tmp])
+      return alpha_best, np.where(alpha_seq==alpha_best)[0][0]
     else:
       tmp = which(val_error <= val_error[min_ind] + SE_val_error[min_ind]);
       alpha_best_1se = max(alpha_seq[tmp])
       return alpha_best_1se, np.where(alpha_seq==alpha_best_1se)[0][0]
   
-  '''
-  def refit(self, X,A,Y,alpha = None, steps = 20000):
-
+  #note: has no relation to the refit_leaves parameter
+  #refits the tree's leaf models on new datasets
+  def refit_leafmods(self, Xnew, Anew, Ynew, weights_new=None, verbose=False, alpha=None, *leafargs_fit,**leafkwargs_fit):
+    '''
+    Returns the response predicted probabilities for the given data Xnew, Anew
+    '''
+    #If Xnew is a pandas data frame, convert it to a numpy array
+    if (isinstance(Xnew,pd.core.frame.DataFrame)):
+      Xnew = Xnew.values
+      
     if alpha is None:
       alpha = self.alpha_best
       
-    num_obs = X.shape[0]
-    unq, unq_inds_vec = self._find_leaf_nodes(0,X,np.array(range(0,num_obs)),alpha);
-    new_args = self.leafkwargs_fit.copy()
-    new_args['steps'] = 20000
-    new_args['learning_rate'] = 0.005    
+    num_obs = Xnew.shape[0]
+    
+    if weights_new is None:
+      weights_new = np.ones([num_obs])
+      
+    unq, unq_inds_vec = self._find_leaf_nodes(0,Xnew,np.array(range(0,num_obs)),alpha);
+    
     for i in range(0,len(unq)):
-          n = unq[i]
-          unq_inds = unq_inds_vec[i]
-          self.tree[n].fitted_model.fit(get_sub(unq_inds,A),
-                                        get_sub(unq_inds,Y),
-                                        weights = np.ones(Y.shape[0]),
-                                        *self.leafargs_fit,**new_args)
-    return 
-  '''
+      if verbose == True:
+        print("Refitting Leaf " + str(i+1) + " / " + str(len(unq)))
+      n = unq[i]
+      unq_inds = unq_inds_vec[i]
+      Asub,Ysub = get_sub(unq_inds,A=Anew,Y=Ynew,is_boolvec=False)
+      weights_sub = weights_new[unq_inds]
+      new_leafmod = LeafModel(*self.leafargs, **self.leafkwargs)
+      error = new_leafmod.fit(Asub, Ysub, weights_sub, *leafargs_fit,**leafkwargs_fit)
+      if error == 1:
+        import sys
+        sys.exit("Refitting a leaf model resulted in an error. Tree object may have been permanently altered with some leaf model refits.")      
+      
+      self.tree[n].fitted_model = new_leafmod
+      
+    return()
   
   '''
   Predicts response data given Xnew,Anew
@@ -500,14 +502,6 @@ class MTP(object):
       num_obs = Xnew.shape[0]
       
       unq, unq_inds_vec = self._find_leaf_nodes(0,Xnew,np.array(range(0,num_obs)),alpha);
-        
-      #Now that we have found the leaf nodes corresponding to each X observation, use the models in these
-      #leaf nodes to output the predictions
-#        try:
-#            n_features = self.leafkwargs_fit["num_features"]
-#        except: 
-#            print("Number of features is unknown, either it was not specified or the model was not fit")
-#            raise
       
       for i in range(0,len(unq)):
         n = unq[i]
@@ -526,135 +520,6 @@ class MTP(object):
       else:
         return(predictions)
   
-#  def predict(self, Xnew, Anew, alpha=None, return_loc=False, *leafargs,**leafkwargs):
-#    '''
-#    Returns the binary predictions only
-#    '''
-#    #If Xnew is a pandas data frame, convert it to a numpy array
-#    if (isinstance(Xnew,pd.core.frame.DataFrame)):
-#      Xnew = Xnew.values
-#    
-#    if alpha is None:
-#      alpha = self.alpha_best
-#    
-#    num_obs = Xnew.shape[0]
-#    
-#    unq, unq_inds_vec = self._find_leaf_nodes(0,Xnew,np.array(range(0,num_obs)),alpha);
-#      
-#    #Now that we have found the leaf nodes corresponding to each X observation, use the models in these
-#    #leaf nodes to output the predictions
-#    predictions = np.array([None]*num_obs)
-#    for i in range(0,len(unq)):
-#      n = unq[i]
-#      unq_inds = unq_inds_vec[i]
-#      leaf_predictions = self.tree[n].fitted_model.predict(get_sub(unq_inds,A=Anew,is_boolvec=False),*leafargs,**leafkwargs)
-#      if not isinstance(leaf_predictions, list):
-#        leaf_predictions = leaf_predictions.tolist()
-#      predictions[unq_inds] = leaf_predictions
-#      #for i,unq_ind in enumerate(unq_inds):
-#        #predictions[unq_ind] = leaf_predictions[i]
-#    if (return_loc==True):
-#      return(predictions,(unq,unq_inds_vec))
-#    else:
-#      return(predictions)
-#    
-#    
-#  def predict_choice(self, Xnew, Anew, alpha=None, return_loc=False, *leafargs,**leafkwargs):
-#        '''
-#        Returns the choice probabilities for a multi-class prediction
-#        '''
-#        #If Xnew is a pandas data frame, convert it to a numpy array
-#        if (isinstance(Xnew,pd.core.frame.DataFrame)):
-#          Xnew = Xnew.values
-#        
-#        if alpha is None:
-#          alpha = self.alpha_best
-#        
-#        num_obs = Xnew.shape[0]
-#        
-#        unq, unq_inds_vec = self._find_leaf_nodes(0,Xnew,np.array(range(0,num_obs)),alpha);
-#          
-#        #Now that we have found the leaf nodes corresponding to each X observation, use the models in these
-#        #leaf nodes to output the predictions
-#        try:
-#            n_features = self.leafkwargs_fit["num_features"]
-#        except: 
-#            print("Number of features is unknown, either it was not specified or the model was not fit")
-#            raise
-#            
-#        predictions = np.zeros((num_obs,int(Anew.shape[1]/n_features)))
-#        
-#        for i in range(0,len(unq)):
-#          n = unq[i]
-#          unq_inds = unq_inds_vec[i]
-#          leaf_predictions = self.tree[n].fitted_model.predict(get_sub(unq_inds,Anew),*leafargs,**leafkwargs)
-#          predictions[unq_inds] = leaf_predictions
-#          #for i,unq_ind in enumerate(unq_inds):
-#            #predictions[unq_ind] = leaf_predictions[i]
-#        if (return_loc==True):
-#          return(predictions,(unq,unq_inds_vec))
-#        else:
-#          return(predictions)
-          
-          
-  def eval_model_choice(self, Xnew, Anew, Ynew, alpha=None, *leafargs,**leafkwargs):
-        '''
-        Evaluates the performance of the model on the threee dimensions
-        '''
-        #If Xnew is a pandas data frame, convert it to a numpy array
-        if (isinstance(Xnew,pd.core.frame.DataFrame)):
-          Xnew = Xnew.values
-        
-        if alpha is None:
-          alpha = self.alpha_best
-        
-        num_obs = Xnew.shape[0]
-        
-        unq, unq_inds_vec = self._find_leaf_nodes(0,Xnew,np.array(range(0,num_obs)),alpha);
-          
-        #Now that we have found the leaf nodes corresponding to each X observation, use the models in these
-        performance = np.zeros((num_obs,4))
-        for i in range(0,len(unq)):
-          n = unq[i]
-          unq_inds = unq_inds_vec[i]
-          performance_dict = self.tree[n].fitted_model.eval_model(
-                                                  get_sub(unq_inds,A=Anew,is_boolvec=False),
-                                                  get_sub(unq_inds,Y=Ynew,is_boolvec=False))
-          performance[unq_inds,0] = performance_dict["loss"]
-          performance[unq_inds,1] = performance_dict["accuracy"]
-          performance[unq_inds,2] = performance_dict["average_rank"]          
-          performance[unq_inds,3] = performance_dict["average_perc"]
-          #for i,unq_ind in enumerate(unq_inds):
-            #predictions[unq_ind] = leaf_predictions[i]
-        return(np.average(performance,axis = 0))
-    
-    
-  def cluster_MNL_choice(self,X,A,Y,Xnew,Anew,Ynew,k,weights =None,*leafargs_fit,**leafkwargs_fit):
-    '''
-    Kmean cluster benchmark
-    '''
-    if weights is None:
-        weights = np.ones([X.shape[0]])
-    self.weights=weights    
-    kmeans = KMeans(n_clusters=k, random_state=0).fit(X)
-    train_labels = kmeans.labels_
-    test_labels = kmeans.predict(Xnew)
-    performance = np.zeros((Xnew.shape[0],4))
-    for i in np.unique(train_labels):
-        inds = np.where(train_labels == i)[0]
-        new_inds = np.where(test_labels == i)[0]            
-        LM = LeafModel()
-        sub_A = get_sub(inds,A=A,is_boolvec=False)
-        sub_Y = get_sub(inds,Y=Y,is_boolvec=False)            
-        sub_weight = self.weights[inds]
-        LM.fit(sub_A,sub_Y,sub_weight,*leafargs_fit,**leafkwargs_fit)
-        performance_dict = LM.eval_model(get_sub(new_inds,A=Anew,is_boolvec=False),
-                                         get_sub(new_inds,Y=Ynew,is_boolvec=False))
-        performance[new_inds,0] = performance_dict["loss"]
-        performance[new_inds,1] = performance_dict["accuracy"]
-        performance[new_inds,2] = performance_dict["average_rank"]  
-        performance[new_inds,3] = performance_dict["average_perc"]
-    return(np.average(performance,axis = 0))             
         
   '''
   Given data Xnew,Anew outputs errors for each observation (e.g., prediction error) as a function of response data Ynew
@@ -1004,7 +869,7 @@ Is splitting on this node computationally-expensive enough to warrant parallel p
 '''
 def _is_node_large(node, X):
   num_obs = len(node.data_inds)
-  if num_obs > 1000:
+  if num_obs > 1100:
     return True
   else:
     return False
@@ -1244,7 +1109,7 @@ def _find_best_split_binary(node, tree_params, leaf_params, verbose, X, A, Y, we
         if (num_splits > 10):
           if ((k % 5) == 0):
             if (verbose==True): print("Node " + str(node.ind)+": Finding best subset of size "+str(k)+" out of "+str(num_splits))
-        
+                
         #base_sub = best subset of size k-1
         if (k == 0):
           base_sub = np.array([]);
@@ -1336,6 +1201,8 @@ def _find_best_split_binary(node, tree_params, leaf_params, verbose, X, A, Y, we
   split_candidates = which([x is not None for x in split_avg_errors]);
   #if there exists no variables left to split on, then make "n" a leaf node
   if (len(split_candidates) == 0):
+    print("Test1")
+    print(split_avg_errors)
     node.is_leaf = True
     del node.data_inds #we don't need this anymore, so delete for memory management
     return [node,None]
@@ -1377,6 +1244,9 @@ def _find_best_split_binary(node, tree_params, leaf_params, verbose, X, A, Y, we
   
   #if the best possible split produces infinite error, then make this a leaf node
   if (min(split_avg_errors[split_candidates]) == float("inf")):
+    print("Test2")
+    print(split_avg_errors)
+    print(split_candidates)
     node.is_leaf = True
     del node.data_inds #we don't need this anymore, so delete for memory management
     return [node,None]
@@ -1425,6 +1295,8 @@ def _find_best_split_binary(node, tree_params, leaf_params, verbose, X, A, Y, we
       avg_error = l_avg_error + r_avg_error
     
     if (avg_error == float("inf")):
+      print("Test3")
+      print(avg_error)
       node.is_leaf = True
       del node.data_inds #we don't need this anymore, so delete for memory management
       return [node,None]
@@ -1447,6 +1319,10 @@ def _find_best_split_binary(node, tree_params, leaf_params, verbose, X, A, Y, we
   #then make this a leaf node
   if (node.depth >= tree_params.min_depth):
     if ((l_node.fitted_model_error+r_node.fitted_model_error) - (-1.0*node.fitted_model_error) >= -1.0*tree_params.min_diff):
+      print("Test4")
+      print(l_node.fitted_model_error+r_node.fitted_model_error)
+      print(node.fitted_model_error)
+      print(tree_params.min_diff)
       node.is_leaf = True
       del node.data_inds #we don't need this anymore, so delete for memory management
       return [node,None]
@@ -1674,9 +1550,12 @@ def _perform_split(sub,Xj,weights_train,fit_init_l,fit_init_r,
     
   else:
     l_fitted_model = leaf_mod_l
-    r_fitted_model = leaf_mod_r
+    r_fitted_model = leaf_mod_r    
+    
     l_avg_errors = np.dot(leaf_mod_l.error(A_l,Y_l),weights_train_l)/sum_weights;
     r_avg_errors = np.dot(leaf_mod_r.error(A_r,Y_r),weights_train_r)/sum_weights;
+    
+    #####################################################################3
     
   l_data = [l_fitted_model, l_avg_errors]
   r_data = [r_fitted_model, r_avg_errors]
