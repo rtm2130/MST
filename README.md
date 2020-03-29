@@ -21,3 +21,5 @@ Dependencies:
 * cmt_example.py code: (python dependencies) numpy, pandas, joblib, tensorflow, rpy2; (R dependencies) mlogit, mnlogit, matrixStats, data.table, limSolve
 
 For guidance on how to create a virtual environment containing all of the above package dependencies, see file "create_virtualenv_tutorial.txt" in the repo.
+
+Note that the code base was only tested in Python 2.7. It is not guaranteed that the code will work correctly in Python 3. 
