@@ -1,6 +1,8 @@
 # MST
 
-This is a Python code base for training "Market Segmentation Trees" (MSTs) (formerly known as "Model Trees for Personalization" (MTPs)). MSTs provide a general framework for jointly performing market segmentation and response modeling. 
+This is a Python code base for training "Market Segmentation Trees" (MSTs) (formerly known as "Model Trees for Personalization" (MTPs)). MSTs provide a general framework for jointly performing market segmentation and response modeling.
+
+Link to paper: [https://arxiv.org/abs/1906.01174](https://arxiv.org/abs/1906.01174)
 
 "mst.py" contains the Python class "MST" used for training MSTs. This class supports the following methods:
 * \_\_init\_\_(): initializes the MST
