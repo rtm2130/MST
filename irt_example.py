@@ -1,21 +1,23 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """ 
-SIMULATED LOGISTIC MODEL TREE DATASET FOR IRMT EVALUATION
+IRT EXAMPLE: SIMULATED LOGISTIC MODEL TREE DATASET
 
 Dataset is generated using a logistic regression model tree of depth 2 (see the Depth2Tree function).
-This example runs our IRMT tree-building algorithm on the dataset to test whether it recovers the true tree.
-Note that as an additional challenge to the IRMT, the leaf nodes of the data-generating tree use logistic regression models (not isotonic regression)
+This example runs our IRT tree-building algorithm on the dataset to test whether it accurately models the data.
+Note that as an additional challenge to the IRT, the leaf nodes of the data-generating tree use logistic regression models
+ (not isotonic regression models).
 
-NOTE: for this to run properly, include the following import statement in mtp.py: "from leaf_model_isoreg import *"
+NOTE: for this to run properly, include the following import statement in mst.py: "from leaf_model_isoreg import *"
 """
 
 import numpy as np
 import pandas as pd
 
-from mtp import MTP
+from mst import MST
 
 np.set_printoptions(suppress=True) #suppress scientific notation
+np.random.seed(0)
 
 """
 Given auction features X and bids P, returns vector of probabilities 
@@ -61,7 +63,7 @@ def Depth2Tree(X,P):
   return(probs);
 
 #SIMULATED DATA PARAMETERS 
-n_train = 100000;
+n_train = 10000;
 n_valid = 2000;
 n_test = 5000;
 p_min = 10;
@@ -69,7 +71,7 @@ p_max = 90;
 X1range = [0,1];
 X3range = [0.0,0.2,0.4,0.6,0.8,1.0];
 
-#generates data from LRMT of depth 2
+#generates data from logistic regression model tree of depth 2
 def generate_data(n):
   #auction features
   X1 = np.random.choice(X1range, size=n_train, replace=True)
@@ -87,9 +89,9 @@ def generate_data(n):
 #GENERATE TRAINING DATA
 X,P,Y,Y_prob = generate_data(n_train)
 
-#FIT IRMT ALGORITHM
-my_tree = MTP(max_depth = 5, min_weights_per_node = 20)
-my_tree.fit(X,P,Y,verbose=True,feats_continuous=[False,True,True],increasing=False); #verbose specifies whether fitting procedure should print progress
+#FIT IRT ALGORITHM
+my_tree = MST(max_depth = 5, min_weights_per_node = 20)
+my_tree.fit(X,P,Y,verbose=False,feats_continuous=[False,True,True],increasing=False); #verbose specifies whether fitting procedure should print progress
 #ABOVE: increasing specifies whether fit isotonic regression models should be monotonically increasing or decreasing.
 #note ground truth has decreasing logistic curves.
 #my_tree.traverse() #prints out the unpruned tree 
@@ -98,7 +100,7 @@ my_tree.fit(X,P,Y,verbose=True,feats_continuous=[False,True,True],increasing=Fal
 X,P,Y,Y_prob = generate_data(n_valid)
 
 #PRUNE DECISION TREE USING VALIDATION SET
-my_tree.prune(X, P, Y, verbose=True) #verbose specifies whether pruning procedure should print progress
+my_tree.prune(X, P, Y, verbose=False) #verbose specifies whether pruning procedure should print progress
 my_tree.traverse() #prints out the pruned tree, compare it against depth-2 tree used to generate the data
 
 #GENERATE TESTING DATA
