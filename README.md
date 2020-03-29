@@ -16,6 +16,8 @@ Two examples of MSTs are provided here:
 (2) "Choice Model Trees" (CMTs): Here, the response models are MNL choice models. The "cmt_exmaple.py" file provides an example of running CMTs on a synthetic dataset.
 
 Dependencies:
-* mst.py code: numpy, pandas, joblib, sklearn
+* mst.py code: numpy, pandas, joblib
 * irt_example.py code: numpy, pandas, joblib, sklearn
-* cmt_example.py code: numpy, pandas, joblib, tensorflow
+* cmt_example.py code: (python dependencies) numpy, pandas, joblib, tensorflow, rpy2; (R dependencies) mlogit, mnlogit, matrixStats, data.table, limSolve
+
+For guidance on how to create a virtual environment containing all of the above package dependencies, see file "create_virtualenv_tutorial.txt" in the repo.
