@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.isotonic import IsotonicRegression
 
 '''
-MTP depends on the classes and functions below. 
+MST depends on the classes and functions below. 
 These classes/methods are used to define the leaf model object in each leaf node,
 as well as helper functions for certain operations in the tree fitting procedure.
 
@@ -11,7 +11,7 @@ One can feel free to edit the code below to accommodate any leaf node model.
 The leaf node model used here is an isotonic regression model fit
 on data (A,Y). A is a vector of bids, and Y is a vector of 0s/1s corresponding
 to auction win/losses (A is are the decisions "P" in the paper). 
-Make sure to add an import statement to mtp.py importing this leaf model class.
+Make sure to add an import statement to mst.py importing this leaf model class.
 
 Summary of methods and functions to specify:
   Methods as a part of class LeafModel: fit(), predict(), to_string(), error(), error_pruning()
@@ -24,7 +24,7 @@ Has five methods: fit, predict, to_string, error, error_pruning
 '''
 class LeafModel(object):
   
-  #Any additional args passed to MTP's init() function are directly passed here
+  #Any additional args passed to MST's init() function are directly passed here
   def __init__(self,*args,**kwargs):
     return
   
@@ -62,7 +62,7 @@ class LeafModel(object):
         anything you want (i.e., it does not have to be self.model_obj below),
         as long as its consistent with your predict_prob() and to_string() methods
   
-  Any additional args passed to MTP's fit() function are directly passed here
+  Any additional args passed to MST's fit() function are directly passed here
   '''
   def fit(self, A, Y, weights, fit_init=None, refit=False, increasing=True):
     #fit isotonic regression model. 
@@ -77,7 +77,7 @@ class LeafModel(object):
   Returns a numpy vector/matrix of response probabilities (one list entry per observation, i.e. l[i] yields prediction for ith obs.).
   Note: make sure to call fit() first before this method.
   
-  Any additional args passed to MTP's predict() function are directly passed here
+  Any additional args passed to MST's predict() function are directly passed here
   '''
   def predict(self, A, *args,**kwargs):
     return self.model_obj.predict(A)
@@ -122,7 +122,7 @@ class LeafModel(object):
   This function returns the string representation of the fitted model
   Used in traverse() method, which traverses the tree and prints out all terminal node models
   
-  Any additional args passed to MTP's traverse() function are directly passed here
+  Any additional args passed to MST's traverse() function are directly passed here
   '''
   def to_string(self,*leafargs,**leafkwargs):
     return "Isotonic Regression Model"
