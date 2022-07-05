@@ -1,6 +1,6 @@
 # MST
 
-This is a Python code base for training "Market Segmentation Trees" (MSTs) (formerly known as "Model Trees for Personalization" (MTPs)). MSTs provide a general framework for jointly performing market segmentation and response modeling.
+This is a Python code base for training "Market Segmentation Trees" (MSTs) (formerly known as "Model Trees for Personalization" (MTPs)). MSTs provide a general framework for jointly performing market segmentation and response modeling. The folder `/scripts` contains the code relative to the case study on Swiss Metro data.
 
 Link to paper: [https://arxiv.org/abs/1906.01174](https://arxiv.org/abs/1906.01174)
 
@@ -24,4 +24,4 @@ Dependencies:
 
 For guidance on how to create a virtual environment containing all of the above package dependencies, see file "create_virtualenv_tutorial.txt" in the repo.
 
-Note that the code base was only tested in Python 2.7. It is not guaranteed that the code will work correctly in Python 3. 
+Note that the code base was only tested in Python 2.7. It is not guaranteed that the code will work correctly in Python 3.
