@@ -55,7 +55,8 @@ To test the package installation or demo the package, users can take the followi
 To run MSTs on the Swiss Metro dataset used by our paper, please take the following steps:
 1. Copy the files leaf_model_mnl_tensorflow.py and mst.py from this repo to the /scripts/src directory
 2. Copy the files newmnlogit.R, leaf_model_mnl.py, and leaf_model_mnl_rmnlogit.py from the https://github.com/rtm2130/CMT-R repo to the /scripts/src directory
-3. Create and activate a virtual environment using the environment_mst.yml file from the https://github.com/rtm2130/CMT-R repo
+3. Create and activate a virtual environment following the steps from the https://github.com/rtm2130/CMT-R repo
 4. Open the /scripts/src/newmnlogit.R file and at the top of the file, change `ro.r.source("newmnlogit.R")` to `ro.r.source("src/newmnlogit.R")`
 5. In /scripts/src/leaf_model_mnl_rmnlogit.py, within the implementation of the `error(self,A,Y)` function, change `log_probas = -np.log(Ypred[(np.arange(Y.shape[0]),Y)])` to `log_probas = -np.log(np.maximum(Ypred[(np.arange(Y.shape[0]),Y)],0.01))`
-6. Open mst.py and ensure that at the top of the file the right leaf model is being imported (`from leaf_model_mnl import *`)
+6. Open /scripts/src/mst.py and ensure that at the top of the file the correct leaf model is being imported (`from leaf_model_mnl import *`)
+7. Within the activated virtual environment, execute the scripts for running the Swiss Metro dataset located within the scripts/ directory.
