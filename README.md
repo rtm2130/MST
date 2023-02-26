@@ -17,7 +17,7 @@ Two examples of MSTs are provided here:
 (1) "Isotonic Regression Model Trees" (IRTs): Here, the response models are isotonic regression models. The "irt_exmaple.py" file provides an example of running IRTs on a synthetic dataset.
 (2) "Choice Model Trees" (CMTs): Here, the response models are MNL choice models. The "cmt_exmaple.py" file provides an example of running CMTs on a synthetic dataset. 
 
-For significantly faster CMT fitting, users can combine this repo with the MNL fitting code found at https://github.com/rtm2130/CMT-R. Please see the CMT-R repo for further instructions. Note that the CMT-R repo is under a GPLv2 license, which is more restrictive on terms of use than this repo's MIT license.
+For significantly faster CMT fitting, users can combine this repo with the MNL fitting code found at https://github.com/rtm2130/CMT-R. Please see the CMT-R repo for further instructions. Note that the CMT-R repo is under a GPLv2 license, which is more restrictive on terms of use than this repo's MIT license. The case study on the Swiss Metro data from our paper was run using the code from the CMT-R repo.
 
 ## Package Installation
 
