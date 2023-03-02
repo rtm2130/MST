@@ -39,7 +39,7 @@ In this step, we will be creating a new conda virtual environment called `mstenv
 
 1. Build a new MST virtual environment which will be named mstenv with the recommended Python version: `conda create --name mstenv python=2.7.15`
 2. Activate the newly-created MST virtual environment: `conda activate mstenv`. All subsequent steps should be followed within the activated virtual environment. 
-3. Install the scikit-learn and joblib packages. Execute the following: `conda install scikit-learn`, `conda install -c anaconda joblib`
+3. Install the pandas, scikit-learn, and joblib packages. Execute the following: `conda install pandas`, `conda install scikit-learn`, `conda install -c anaconda joblib`
 4. Install tensorflow ensuring compatibility with python 2.7. The following worked for us: `pip install --upgrade tensorflow`
 5. Deactivate the environment: `conda deactivate`. Going forward, users should activate their MST virtual environment prior to working with the code in this repo via `conda activate mstenv`.
 

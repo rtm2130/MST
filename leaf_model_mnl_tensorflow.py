@@ -347,7 +347,7 @@ class LeafModelTensorflow(object):
     def fit(self, A, Y, weights, fit_init=None, refit=False, mode = "mnl",
             batch_size = 50, path = "", model_type = 0, num_features = 2, 
             epochs = 10, steps = 20000, steps_refit = 60000, learning_rate = 0.01,
-            learning_rate_refit = 0.001, is_bias = True, **kwargs):
+            learning_rate_refit = 0.001, is_bias = True, loglik_proba_cap=0, **kwargs):
         '''
         Fits a multinomial logistic regression to the data (A,Y).
         
@@ -376,6 +376,7 @@ class LeafModelTensorflow(object):
         (1) self.model_obj: the model object outputted from tensor_flow
         (2) self.model_coef: the coefficients of the regression model, [interceptA, interceptB, etc., price_elasticityA, price_elasticityB, etc]
         '''
+        self.loglik_proba_cap = loglik_proba_cap
 #         initialize a tensorflow graph
         try:
             if refit == True:
@@ -508,9 +509,9 @@ class LeafModelTensorflow(object):
 #              x={"x": np.float32(A), "weight_data": np.ones(A.shape[0])}, 
 #              y= Y, shuffle = False, batch_size = 1)
 #        evaluation = self.model_obj.evaluate(eval_input_fn)
+        loglik_proba_cap = self.loglik_proba_cap
         Ypred = self.predict(A)
-#        log_probas = -np.log(np.maximum(Ypred[(np.arange(Y.shape[0]),Y)],0.001))
-        log_probas = -np.log(Ypred[(np.arange(Y.shape[0]),Y)])
+        log_probas = -np.log(np.maximum(Ypred[(np.arange(Y.shape[0]),Y)],loglik_proba_cap))
         return(log_probas)
     
     '''
