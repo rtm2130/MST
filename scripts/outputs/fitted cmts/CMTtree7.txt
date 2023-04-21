@@ -1,0 +1,518 @@
+Node 0: Depth 0
+Parent Node: NA <Root>
+Non-terminal Node splitting on (categorical) var V0
+Splitting Question: Is V0 in: 
+[2.]
+Child Nodes: 1 (True), 2 (False)
+
+
+Node 1: Depth 1
+Parent Node: 0
+Non-terminal Node splitting on (categorical) var V1
+Splitting Question: Is V1 in: 
+[3.]
+Child Nodes: 3 (True), 4 (False)
+
+
+Node 2: Depth 1
+Parent Node: 0
+Non-terminal Node splitting on (categorical) var V2
+Splitting Question: Is V2 in: 
+[0.]
+Child Nodes: 5 (True), 6 (False)
+
+
+Node 3: Depth 2
+Parent Node: 1
+Non-terminal node splitting on (numeric) var V6
+Splitting Question: Is V6 <= 4?
+Child Nodes: 7 (True), 8 (False)
+
+
+Node 4: Depth 2
+Parent Node: 1
+Non-terminal Node splitting on (categorical) var V9
+Splitting Question: Is V9 in: 
+[0.]
+Child Nodes: 9 (True), 10 (False)
+
+
+Node 5: Depth 2
+Parent Node: 2
+Non-terminal Node splitting on (categorical) var V4
+Splitting Question: Is V4 in: 
+[3.]
+Child Nodes: 11 (True), 12 (False)
+
+
+Node 6: Depth 2
+Parent Node: 2
+Non-terminal Node splitting on (categorical) var V1
+Splitting Question: Is V1 in: 
+[4.]
+Child Nodes: 13 (True), 14 (False)
+
+
+Node 7: Depth 3
+Parent Node: 3
+Non-terminal Node splitting on (categorical) var V2
+Splitting Question: Is V2 in: 
+[0.]
+Child Nodes: 15 (True), 16 (False)
+
+
+Node 8: Depth 3
+Parent Node: 3
+Non-terminal Node splitting on (categorical) var V3
+Splitting Question: Is V3 in: 
+[1.]
+Child Nodes: 17 (True), 18 (False)
+
+
+Node 9: Depth 3
+Parent Node: 4
+Non-terminal Node splitting on (categorical) var V4
+Splitting Question: Is V4 in: 
+[1.]
+Child Nodes: 19 (True), 20 (False)
+
+
+Node 10: Depth 3
+Parent Node: 4
+Non-terminal Node splitting on (categorical) var V4
+Splitting Question: Is V4 in: 
+[3.]
+Child Nodes: 21 (True), 22 (False)
+
+
+Node 11: Depth 3
+Parent Node: 5
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 1.325953e+00  8.783619e-01  2.373325e-03 -4.176874e-02 -6.022532e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+ 3.466052e-03 -2.790853e-02 -1.247224e-02 -9.942328e-03 -6.221552e-03 
+         F3:3           Avl 
+ 4.779998e-04  1.000000e+04 
+
+
+
+Node 12: Depth 3
+Parent Node: 5
+Non-terminal Node splitting on (categorical) var V5
+Splitting Question: Is V5 in: 
+[0.]
+Child Nodes: 25 (True), 26 (False)
+
+
+Node 13: Depth 3
+Parent Node: 6
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-2.227858e-01  8.406172e-01 -2.036695e-02 -2.230669e-02 -2.036710e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-1.897522e-02 -1.682998e-02 -3.858540e-04 -1.658344e-02 -2.408543e-02 
+         F3:3           Avl 
+ 3.156915e-04  1.000000e+04 
+
+
+
+Node 14: Depth 3
+Parent Node: 6
+Non-terminal Node splitting on (categorical) var V5
+Splitting Question: Is V5 in: 
+[0.]
+Child Nodes: 29 (True), 30 (False)
+
+
+Node 15: Depth 4
+Parent Node: 7
+Non-terminal node splitting on (numeric) var V6
+Splitting Question: Is V6 <= 1?
+Child Nodes: 31 (True), 32 (False)
+
+
+Node 16: Depth 4
+Parent Node: 7
+Non-terminal Node splitting on (categorical) var V3
+Splitting Question: Is V3 in: 
+[6.]
+Child Nodes: 33 (True), 34 (False)
+
+
+Node 17: Depth 4
+Parent Node: 8
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-1.123554e+01 -4.477190e+01 -2.267134e-01 -3.458556e-01 -5.254979e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-9.133429e-02 -3.960632e-01 -1.438846e-01  1.300592e-02 -2.492927e-01 
+         F3:3           Avl 
+-1.195638e-02  1.000000e+04 
+
+
+
+Node 18: Depth 4
+Parent Node: 8
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 1.043212e-04 -6.841213e-04 -5.563732e-03  1.218006e-04 -3.139283e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-2.336071e-02 -1.247256e-04 -7.901893e-03 -6.917012e-02  1.625783e-02 
+         F3:3           Avl 
+-3.402234e-07  1.000000e+04 
+
+
+
+Node 19: Depth 4
+Parent Node: 9
+Non-terminal Node splitting on (categorical) var V3
+Splitting Question: Is V3 in: 
+[8.]
+Child Nodes: 37 (True), 38 (False)
+
+
+Node 20: Depth 4
+Parent Node: 9
+Non-terminal node splitting on (numeric) var V6
+Splitting Question: Is V6 <= 3?
+Child Nodes: 39 (True), 40 (False)
+
+
+Node 21: Depth 4
+Parent Node: 10
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 9.375536e-04 -1.004398e-03  1.260930e-02 -1.054411e-03 -3.502321e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+ 7.029674e-02 -1.288509e-03  4.091012e-02 -2.269608e-02 -9.678503e-02 
+         F3:3           Avl 
+-8.918519e-07  1.000000e+04 
+
+
+
+Node 22: Depth 4
+Parent Node: 10
+Non-terminal Node splitting on (categorical) var V10
+Splitting Question: Is V10 in: 
+[2.]
+Child Nodes: 43 (True), 44 (False)
+
+
+Node 25: Depth 4
+Parent Node: 12
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-6.819371e-01 -1.573814e+00 -2.585415e-02 -5.128891e-02 -1.818237e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-2.543544e-02 -3.831630e-02 -1.022069e-02 -2.786839e-02 -1.818408e-02 
+         F3:3           Avl 
+-7.924858e-04  1.000000e+04 
+
+
+
+Node 26: Depth 4
+Parent Node: 12
+Non-terminal Node splitting on (categorical) var V1
+Splitting Question: Is V1 in: 
+[4.]
+Child Nodes: 47 (True), 48 (False)
+
+
+Node 29: Depth 4
+Parent Node: 14
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 1.094867e+00  1.625315e+00 -1.694738e-02 -2.663215e-02 -8.414517e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-2.032642e-02 -1.608930e-02 -7.799720e-03 -3.067089e-02 -9.312299e-03 
+         F3:3           Avl 
+ 8.492096e-04  1.000000e+04 
+
+
+
+Node 30: Depth 4
+Parent Node: 14
+Non-terminal node splitting on (numeric) var V6
+Splitting Question: Is V6 <= 3?
+Child Nodes: 55 (True), 56 (False)
+
+
+Node 31: Depth 5
+Parent Node: 15
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 3.443350e-03 -4.378950e-03 -1.007828e-02 -3.364057e-03 -8.786431e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-9.413286e-03 -2.997857e-03 -1.197589e-02 -5.601193e-02 -2.607422e-01 
+         F3:3           Avl 
+-1.068538e-06  1.000000e+04 
+
+
+
+Node 32: Depth 5
+Parent Node: 15
+Non-terminal Node splitting on (categorical) var V10
+Splitting Question: Is V10 in: 
+[25.]
+Child Nodes: 59 (True), 60 (False)
+
+
+Node 33: Depth 5
+Parent Node: 16
+Leaf: Model params: (Intercept):2          F1:1          F2:1          F3:1          F1:2 
+-1.392565e-04 -5.289544e-03 -1.820696e-03  1.095885e-03  1.197401e-02 
+         F2:2          F3:2           Avl 
+-1.382060e-03 -5.797982e-02  1.000000e+04 
+
+
+
+Node 34: Depth 5
+Parent Node: 16
+Non-terminal Node splitting on (categorical) var V3
+Splitting Question: Is V3 in: 
+[3.]
+Child Nodes: 61 (True), 62 (False)
+
+
+Node 37: Depth 5
+Parent Node: 19
+Leaf: Model params: (Intercept):2          F1:1          F2:1          F3:1          F1:2 
+ 1.957240e+00  1.499659e-02 -3.715320e-02 -2.919369e-03  1.501108e-02 
+         F2:2          F3:2           Avl 
+-2.849846e-02 -6.401388e-02  1.000000e+04 
+
+
+
+Node 38: Depth 5
+Parent Node: 19
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 1.417604e+00 -1.411099e+00 -2.147900e-02 -2.837448e-02 -4.548326e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-2.685419e-02 -3.392375e-02 -2.425803e-02 -1.247840e-03 -1.039347e-01 
+         F3:3           Avl 
+-6.565652e-04  1.000000e+04 
+
+
+
+Node 39: Depth 5
+Parent Node: 20
+Non-terminal Node splitting on (categorical) var V3
+Splitting Question: Is V3 in: 
+[8.]
+Child Nodes: 65 (True), 66 (False)
+
+
+Node 40: Depth 5
+Parent Node: 20
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-2.318052e+01  2.580614e+01 -5.093869e-02 -1.109005e-01 -1.707231e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+ 4.636661e-01 -9.029054e-02 -4.100010e-02 -7.181445e-02 -7.382533e-01 
+         F3:3           Avl 
+ 2.496013e-02  1.000000e+04 
+
+
+
+Node 43: Depth 5
+Parent Node: 22
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 1.038622e-04 -2.989408e-04  1.209010e-02 -1.970690e-03 -9.417643e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-1.848565e-03 -9.716173e-04 -1.243545e-02 -5.321963e-02 -4.135498e-02 
+         F3:3           Avl 
+-1.771169e-07  1.000000e+04 
+
+
+
+Node 44: Depth 5
+Parent Node: 22
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 8.298658e-04 -2.084982e-03 -2.665349e-02 -1.745475e-03 -6.960740e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-6.608439e-02 -9.764024e-04 -1.177888e-02 -1.375504e-01 -1.707797e-01 
+         F3:3           Avl 
+-1.024070e-06  1.000000e+04 
+
+
+
+Node 47: Depth 5
+Parent Node: 26
+Non-terminal Node splitting on (categorical) var V10
+Splitting Question: Is V10 in: 
+[2.]
+Child Nodes: 75 (True), 76 (False)
+
+
+Node 48: Depth 5
+Parent Node: 26
+Non-terminal Node splitting on (categorical) var V10
+Splitting Question: Is V10 in: 
+[22.]
+Child Nodes: 77 (True), 78 (False)
+
+
+Node 55: Depth 5
+Parent Node: 30
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 7.085397e+00  7.289834e+00  1.301506e-04 -1.760330e-02  1.146145e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-1.259443e-02 -1.798147e-02 -6.644606e-03 -2.136428e-02 -9.831599e-03 
+         F3:3           Avl 
+ 4.397420e-03  1.000000e+04 
+
+
+
+Node 56: Depth 5
+Parent Node: 30
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-3.699261e+00 -4.552284e+00 -1.284891e-02 -6.564383e-02 -1.714189e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-1.022688e-02 -1.389372e-02 -1.272448e-02 -1.645595e-02  1.671933e-03 
+         F3:3           Avl 
+-2.762092e-03  1.000000e+04 
+
+
+
+Node 59: Depth 6
+Parent Node: 32
+Non-terminal node splitting on (numeric) var V6
+Splitting Question: Is V6 <= 2?
+Child Nodes: 95 (True), 96 (False)
+
+
+Node 60: Depth 6
+Parent Node: 32
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 1.120206e+00 -1.049143e+00 -6.190807e-03 -6.676440e-04 -1.201669e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-1.781892e-02 -8.675767e-04 -7.656370e-03 -7.747954e-04 -2.221153e-02 
+         F3:3           Avl 
+-5.245339e-04  1.000000e+04 
+
+
+
+Node 61: Depth 6
+Parent Node: 34
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-2.164674e-01  6.599220e+00  2.144249e-02 -8.082975e-02 -3.359546e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+ 4.355404e-02 -6.417754e-02 -7.403923e-02 -1.306176e-01 -2.907630e-02 
+         F3:3           Avl 
+ 5.048353e-03  1.000000e+04 
+
+
+
+Node 62: Depth 6
+Parent Node: 34
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 1.109938e+00  2.395254e+00 -3.477939e-02  3.207027e-03 -1.053822e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-2.988665e-02 -5.313890e-03 -4.501865e-02 -2.095327e-02 -8.510064e-02 
+         F3:3           Avl 
+ 1.275527e-03  1.000000e+04 
+
+
+
+Node 65: Depth 6
+Parent Node: 39
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-1.850313e+02 -1.828247e+01  2.841832e+00 -1.533079e+00 -1.105342e+00 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+ 1.166430e+01 -1.161357e+00  6.413326e-01 -7.101049e+00 -3.793326e+00 
+         F3:3           Avl 
+-2.568471e-03  1.000000e+04 
+
+
+
+Node 66: Depth 6
+Parent Node: 39
+Non-terminal Node splitting on (categorical) var V10
+Splitting Question: Is V10 in: 
+[2.]
+Child Nodes: 105 (True), 106 (False)
+
+
+Node 75: Depth 6
+Parent Node: 47
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-3.579457e-01  8.204088e+00 -2.778336e-03 -9.642856e-03 -3.099901e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+ 8.888432e-03 -4.189487e-02  5.464306e-02 -2.781386e-02 -7.376046e-02 
+         F3:3           Avl 
+ 1.758931e-03  1.000000e+04 
+
+
+
+Node 76: Depth 6
+Parent Node: 47
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-8.137494e-02  8.367789e-01 -5.717951e-03 -9.480729e-02  3.168238e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-4.261350e-03 -2.669000e-02 -1.672876e-02 -1.776758e-02 -1.291577e-02 
+         F3:3           Avl 
+ 3.995432e-04  1.000000e+04 
+
+
+
+Node 77: Depth 6
+Parent Node: 48
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 4.380521e+00  3.052224e+00 -1.789523e-02  3.205830e-04 -1.466544e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-3.328775e-02 -1.338366e-02  1.608181e-02 -1.390682e-02 -6.048843e-03 
+         F3:3           Avl 
+ 1.358542e-03  1.000000e+04 
+
+
+
+Node 78: Depth 6
+Parent Node: 48
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-1.387331e+00  3.412750e-02 -2.642945e-02 -3.349099e-02 -1.568013e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-1.531637e-02 -3.183321e-02  7.893375e-03 -3.499643e-02 -1.247376e-02 
+         F3:3           Avl 
+-2.518494e-05  1.000000e+04 
+
+
+
+Node 95: Depth 7
+Parent Node: 59
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+ 9.734514e+00 -5.891542e+00 -5.591761e-02 -4.844854e-01 -1.588088e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-3.500594e-02 -7.090793e-01  7.235398e-02 -2.831226e-01  1.207380e-02 
+         F3:3           Avl 
+-1.365613e-02  1.000000e+04 
+
+
+
+Node 96: Depth 7
+Parent Node: 59
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-1.378432e+00  9.248908e+00  7.917219e-03 -3.458886e-02 -3.721787e-03 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-9.985685e-03  9.682407e-03  1.206467e-02 -1.791454e-01 -7.782965e-02 
+         F3:3           Avl 
+ 4.736501e-03  1.000000e+04 
+
+
+
+Node 105: Depth 7
+Parent Node: 66
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-3.725966e+01 -3.830458e+01 -3.799547e-01  1.618271e-01 -3.484242e-01 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-5.489526e-03 -1.006535e-01  8.306403e-03 -3.394905e-02 -7.947297e-02 
+         F3:3           Avl 
+-2.006590e-02  1.000000e+04 
+
+
+
+Node 106: Depth 7
+Parent Node: 66
+Leaf: Model params: (Intercept):2 (Intercept):3          F1:1          F2:1          F3:1 
+-2.166898e-01 -1.713911e+00 -3.333045e-02 -1.988720e-02 -1.852417e-02 
+         F1:2          F2:2          F3:2          F1:3          F2:3 
+-2.795270e-02 -1.156124e-02 -4.441230e-02 -4.025003e-02 -5.366437e-03 
+         F3:3           Avl 
+-9.433247e-04  1.000000e+04 
+
+
+
+Max depth:7
+Num. Nodes: 55.0
+Num. Terminal Nodes: 28.0
