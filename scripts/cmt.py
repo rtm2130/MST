@@ -3,6 +3,8 @@ import numpy as np
 from src.mst import MST
 from src.cart_customerfeats_in_leafmod import append_customer_features_to_product_features
 
+import sys
+import pickle
 
 c_features = ["GROUP", "PURPOSE", "FIRST", "TICKET", "WHO", "LUGGAGE", "AGE", 
               "MALE", "INCOME", "GA", "ORIGIN", "DEST"]
@@ -21,6 +23,7 @@ scores_np = np.zeros((10,2,4))
 scores_np = np.zeros((10,2,6,15))
 
 for i in range(10):
+#for i in [9]:
     num_features = 4
     X = np.load('data/X'+str(i)+'.npy')
     P = np.load('data/P'+str(i)+'.npy')
@@ -36,7 +39,8 @@ for i in range(10):
     
     P = P.astype(float)
     PV = PV.astype(float)
-    PT = PT.astype(float)       
+    PT = PT.astype(float)      
+    #very small perturbation because car does not have variation in headway
     P[:,-1] = 0.001*np.random.rand(P.shape[0])
     PV[:,-1] = 0.001*np.random.rand(PV.shape[0])
     PT[:,-1] = 0.001*np.random.rand(PT.shape[0])     
@@ -51,6 +55,7 @@ for i in range(10):
 #                                                                           feats_continuous=is_continuous, 
 #                                                                           model_type=model_type, num_features=num_features)    
     for depth in [14]:  
+#    for depth in [3,4]:        
 #    for depth in range(15):               
         #APPLY TREE ALGORITHM. TRAIN TO DEPTH 1
         my_tree = MST(max_depth = depth, min_weights_per_node = 50, only_singleton_splits = True, quant_discret = 0.05)
@@ -59,7 +64,7 @@ for i in range(10):
                          refit_leaves=True,only_singleton_splits = True,
                          num_features = num_features, is_bias = is_bias, model_type = model_type,
                          mode = "mnl", batch_size = 100, epochs = 50, steps = 6000,
-                         leaf_mod_thresh=10000000);
+                         leaf_mod_thresh=10000000,loglik_proba_cap=0.01);
         #ABOVE: leaf_mod_thresh controls whether when fitting a leaf node we apply Newton's method or stochastic gradient descent.
         # If the number of training observations in a leaf node <= leaf_mod_thresh, then newton's method
         # is applied; otherwise, stochastic gradient descent is applied.
@@ -67,6 +72,8 @@ for i in range(10):
         
         YT_flat = np.zeros((YT.shape[0],3))
         YT_flat[np.arange(YT.shape[0]),YT] = 1
+        YV_flat = np.zeros((YV.shape[0],3))
+        YV_flat[np.arange(YV.shape[0]),YV] = 1        
         Y_flat = np.zeros((Y.shape[0],3))
         Y_flat[np.arange(Y.shape[0]),Y] = 1 
         
@@ -86,7 +93,7 @@ for i in range(10):
 #        my_tree.traverse(verbose=True)
         
         # Post-pruning metrics
-        my_tree.prune(XV, PV, YV, verbose=False)
+        my_tree.prune(XV, PV, YV, verbose=False, one_SE_rule = False)
         
 #        my_tree.traverse(verbose=True)
         
@@ -102,5 +109,15 @@ for i in range(10):
         
         scores_np[i,1,4,depth] = sum(map(lambda x: x.is_leaf,my_tree.tree))
         scores_np[i,1,5,depth] = sum(map(lambda x: x.alpha_thresh < np.inf,my_tree.tree))        
+        
+#        f = open('CMTtree'+str(i)+'.p', 'w')
+#        pickle.dump(my_tree, f)
+#        f.close()
+#        
+#        original_stdout = sys.stdout
+#        with open('CMTtree'+str(i)+'.txt', 'w') as f:
+#            sys.stdout = f; 
+#            my_tree.traverse(verbose=True);
+#            sys.stdout = original_stdout;
 
    

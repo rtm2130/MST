@@ -2,7 +2,8 @@
 import numpy as np
 from src.mst import MST
 from src.cart_customerfeats_in_leafmod import append_customer_features_to_product_features
-
+import pickle
+import sys
 
 c_features = ["GROUP", "PURPOSE", "FIRST", "TICKET", "WHO", "LUGGAGE", "AGE", 
               "MALE", "INCOME", "GA", "ORIGIN", "DEST"]
@@ -59,7 +60,7 @@ for i in range(10):
                          refit_leaves=True,only_singleton_splits = True,
                          num_features = num_features, is_bias = is_bias, model_type = model_type,
                          mode = "mnl", batch_size = 100, epochs = 50, steps = 6000,
-                         leaf_mod_thresh=10000000);
+                         leaf_mod_thresh=10000000,loglik_proba_cap=0.01);
         #ABOVE: leaf_mod_thresh controls whether when fitting a leaf node we apply Newton's method or stochastic gradient descent.
         # If the number of training observations in a leaf node <= leaf_mod_thresh, then newton's method
         # is applied; otherwise, stochastic gradient descent is applied.
@@ -104,3 +105,12 @@ for i in range(10):
         scores_np[i,1,5,depth] = sum(map(lambda x: x.alpha_thresh < np.inf,my_tree.tree))        
 
    
+#        f = open('CMTtree+'+str(i)+'.p', 'w')
+#        pickle.dump(my_tree, f)
+#        f.close()
+#        
+#        original_stdout = sys.stdout
+#        with open('CMTtree+'+str(i)+'.txt', 'w') as f:
+#            sys.stdout = f; 
+#            my_tree.traverse(verbose=True);
+#            sys.stdout = original_stdout;
